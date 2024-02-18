@@ -54,6 +54,10 @@ def build_parser():
         '-b', dest='branch',
         help='Branch of the repo manifest to pull'
     )
+    parser.add_argument(
+        '-d', '--dst', dest='dst',
+        help='Destination of repo'
+    )
 
     return parser
 
@@ -80,10 +84,11 @@ def get_pat(ghe: bool = False):
 def init_repo(url: str,
               branch: str = "main",
               repo_folder: str = ".repo",
-              manifest_file_name: str = "default.xml"):
+              manifest_file_name: str = "default.xml",
+              dst_folder: str = os.getcwd()):
     """ Get repo manifest file """
 
-    current_base_path = pathlib.Path(os.getcwd())
+    current_base_path = pathlib.Path(dst_folder)
 
     hostname = url.strip(".git").split('://')[-1].split('/', 1)[0]
     repo_link = url.strip(".git").split('://')[-1].split('/', 1)[-1]
@@ -105,11 +110,12 @@ def init_repo(url: str,
         f.flush()
 
 
-def get_repo_manifest(repo_folder: str = ".repo",
+def get_repo_manifest(dst_path: str = os.getcwd(),
+                      repo_folder: str = ".repo",
                       manifest_file_name: str = "default.xml"):
     """ Clone the repo manifest """
 
-    repo_path = pathlib.Path(os.getcwd()) / repo_folder / manifest_file_name
+    repo_path = pathlib.Path(dst_path) / repo_folder / manifest_file_name
 
     try:
         with open(repo_path, 'r') as f:
@@ -152,32 +158,34 @@ def get_repo_manifest(repo_folder: str = ".repo",
     return manifest_mapping
 
 
-def sync_repos(manifest: Dict):
+def sync_repos(manifest: Dict, dst_path: str = os.getcwd()):
     """ Sync GitHub repos from manifest file """
 
-    def clone_repo(path: str, repo: Dict):
+    def clone_repo(path: str, repo_data: Dict, dst_path: str):
         """ Clone repo to dst path """
 
-        pat = get_pat(ghe="schneider-electric" in repo["remote"])
-        hostname = repo["remote"].split("://")[-1]
-        dst_path = pathlib.Path(os.getcwd()) / repo["path"]
+        pat = get_pat(ghe="schneider-electric" in repo_data["remote"])
+        hostname = repo_data["remote"].split("://")[-1]
+        dst_path = pathlib.Path(dst_path) / repo_data["path"]
         url = f"https://{pat}@{hostname}/{path}.git"
 
         logging.info(f"Cloning {url}")
-        Repo.clone_from(url, dst_path, branch=repo["revision"])
+        Repo.clone_from(url, dst_path, branch=repo_data["revision"])
 
     if manifest is None:
         raise Exception("Manifest file mapping missing run with --init flag")
 
     threads = {}
-    for repo_path, repo in manifest.items():
+    for repo_path, repo_info in manifest.items():
 
-        count = repo["path"].count('/')
+        count = repo_info["path"].count('/')
 
         if count not in threads:
             threads[count] = []
 
-        task_thread = threading.Thread(target=clone_repo, args=(repo_path, repo), daemon=True)
+        task_thread = threading.Thread(target=clone_repo,
+                                       args=(repo_path, repo_info, dst_path),
+                                       daemon=True)
 
         threads[count].append(task_thread)
 
@@ -189,6 +197,10 @@ def sync_repos(manifest: Dict):
     for count in threads:
         for thread in threads[count]:
             thread.join()
+
+
+def start_repos(branch: str):
+    """ Start the repo on branch """
 
 
 def main():
@@ -204,16 +216,23 @@ def main():
                         stream=sys.stdout,
                         level=logging.INFO)
 
+    dst_folder = os.getcwd()
+    if args.dst:
+        dst_folder = args.dst
+
     branch = args.branch
     if branch is None:
         branch = "main"
 
     if args.init:
-        init_repo(args.url, branch)
+        init_repo(args.url, branch, dst_folder=dst_folder)
 
     if args.sync:
-        manifest_mapping = get_repo_manifest()
-        sync_repos(manifest_mapping)
+        manifest_mapping = get_repo_manifest(dst_path=dst_folder)
+        sync_repos(manifest_mapping, dst_path=dst_folder)
+
+    if args.start:
+        start_repos(args.start)
 
 
 if __name__ == '__main__':
