@@ -62,6 +62,14 @@ def build_parser():
     return parser
 
 
+def clean_dst(folder: str):
+    """ clean the dst folder """
+
+    for item in os.listdir(folder):
+        if os.path.isdir(pathlib.Path(folder) / item):
+            shutil.rmtree(pathlib.Path(folder) / item)
+
+
 def get_pat(ghe: bool = False):
     """ Get PAT from WCM """
 
@@ -225,6 +233,8 @@ def main():
         branch = "main"
 
     if args.init:
+        if pathlib.Path(dst_folder) != pathlib.Path(__file__).resolve().parent:
+            clean_dst(dst_folder)
         init_repo(args.url, branch, dst_folder=dst_folder)
 
     if args.sync:
