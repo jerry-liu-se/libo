@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# (c) 2023 Schneider Electric SE. All rights reserved.
+# (c) 2024 Schneider Electric SE. All rights reserved.
 # All trademarks are owned or licensed by Schneider Electric SAS,
 # its subsidiaries or affiliated companies.
 #
@@ -13,6 +13,7 @@ import pathlib
 import shutil
 import sys
 import threading
+import time
 from typing import Dict
 
 import keyring
@@ -52,10 +53,6 @@ def build_parser():
     parser.add_argument(
         '-b', dest='branch',
         help='Branch of the repo manifest to pull'
-    )
-    parser.add_argument(
-        '-v', dest='verbose', action="store_true",
-        help='Run with verbose level DEBUG'
     )
 
     return parser
@@ -166,24 +163,32 @@ def sync_repos(manifest: Dict):
         dst_path = pathlib.Path(os.getcwd()) / repo["path"]
         url = f"https://{pat}@{hostname}/{path}.git"
 
+        logging.info(f"Cloning {url}")
         Repo.clone_from(url, dst_path, branch=repo["revision"])
 
     if manifest is None:
         raise Exception("Manifest file mapping missing run with --init flag")
 
-    threads = []
+    threads = {}
     for repo_path, repo in manifest.items():
-        task_thread = threading.Thread(target=clone_repo,
-                                       args=(repo_path, repo),
-                                       daemon=True)
 
-        threads.append(task_thread)
+        count = repo["path"].count('/')
 
-    for thread in threads:
-        thread.start()
+        if count not in threads:
+            threads[count] = []
 
-    for thread in threads:
-        thread.join()
+        task_thread = threading.Thread(target=clone_repo, args=(repo_path, repo), daemon=True)
+
+        threads[count].append(task_thread)
+
+    for count in threads:
+        for thread in threads[count]:
+            thread.start()
+        time.sleep(1)
+
+    for count in threads:
+        for thread in threads[count]:
+            thread.join()
 
 
 def main():
@@ -197,7 +202,7 @@ def main():
     logging.basicConfig(datefmt="%Y-%m-%d %H:%M:%S",
                         format="[%(asctime)s.%(msecs)03d] %(levelname)s: %(message)s",
                         stream=sys.stdout,
-                        level=logging.INFO if not args.verbose else logging.DEBUG)
+                        level=logging.INFO)
 
     branch = args.branch
     if branch is None:
