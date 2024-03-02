@@ -10,7 +10,7 @@ import argparse
 import logging
 import os
 import pathlib
-import shutil
+import stat
 import sys
 import threading
 import time
@@ -27,6 +27,9 @@ KEYRING_USER_NAME = "GITHUB_PAT_USER"
 KEYRING_SERVICE_NAME_GHE = "GHE_PAT"
 KEYRING_USER_NAME_GHE = "GHE_PAT_USER"
 
+PAT = None
+GHE_PAT = None
+
 
 def build_parser():
     """ Build argument parser. """
@@ -36,7 +39,7 @@ def build_parser():
     )
     parser.add_argument(
         '-u', '--url', dest='url',
-        help='Repo Manifest URL', required=True
+        help='Repo Manifest URL'
     )
     parser.add_argument(
         '--init', dest='init', action="store_true",
@@ -58,16 +61,44 @@ def build_parser():
         '-d', '--dst', dest='dst',
         help='Destination of repo'
     )
+    parser.add_argument(
+        '--status', dest='status',
+        help='Branch status of repo'
+    )
+    parser.add_argument(
+        '--pat', dest='pat',
+        help='GitHub PAT (Queried from WCM if not provided)'
+    )
+    parser.add_argument(
+        '--ghe-pat', dest='ghe_pat',
+        help='GitHub Enterprise PAT (Queried from WCM if not provided)'
+    )
 
     return parser
 
 
-def clean_dst(folder: str):
+def clean_dst(dst_folder: pathlib.Path):
     """ clean the dst folder """
 
-    for item in os.listdir(folder):
-        if os.path.isdir(pathlib.Path(folder) / item):
-            shutil.rmtree(pathlib.Path(folder) / item)
+    def rmtree(top: pathlib.Path):
+        """ os walk to remove files and dir """
+
+        for root, dirs, files in os.walk(top, topdown=False):
+
+            for name in files:
+                filename = os.path.join(root, name)
+                os.chmod(filename, stat.S_IWUSR)
+                os.remove(filename)
+
+            for name in dirs:
+                os.rmdir(os.path.join(root, name))
+
+        os.rmdir(top)
+
+    if os.path.exists(dst_folder):
+        rmtree(dst_folder)
+
+    pathlib.Path(dst_folder).mkdir(exist_ok=True)
 
 
 def get_pat(ghe: bool = False):
@@ -82,7 +113,7 @@ def get_pat(ghe: bool = False):
                                    KEYRING_USER_NAME_GHE)
 
     if pat is None:
-        raise Exception("No GitHub PAT or GHE PAT found in WCM. "
+        raise Exception("No GitHub PAT or GHE PAT not provided or found in WCM. "
                         "Please provide a PAT or run the PAT manager tool. "
                         "https://github.com/SchneiderProsumer/test-project-credential-manager")
 
@@ -96,31 +127,31 @@ def init_repo(url: str,
               dst_folder: str = os.getcwd()):
     """ Get repo manifest file """
 
-    current_base_path = pathlib.Path(dst_folder)
-
-    hostname = url.strip(".git").split('://')[-1].split('/', 1)[0]
-    repo_link = url.strip(".git").split('://')[-1].split('/', 1)[-1]
+    hostname = url.replace('.git', '').split('://')[-1].split('/', 1)[0]
+    repo_link = url.replace('.git', '').split('://')[-1].split('/', 1)[-1]
 
     pat = get_pat()
+
     git = Github(base_url=f"https://api.{hostname}", auth=Auth.Token(pat))
     repo = git.get_repo(repo_link)
     branch = repo.get_branch(branch)
 
     file_content = repo.get_contents(manifest_file_name, ref=branch.commit.sha)
 
-    if os.path.exists(current_base_path / repo_folder):
-        shutil.rmtree(current_base_path / repo_folder)
-    os.mkdir(current_base_path / repo_folder)
+    if os.path.exists(pathlib.Path(dst_folder) / repo_folder):
+        clean_dst(pathlib.Path(dst_folder) / repo_folder)
+
+    os.mkdir(pathlib.Path(dst_folder) / repo_folder)
 
     text = file_content.decoded_content.decode("utf-8", errors="ignore")
-    with open(current_base_path / repo_folder / manifest_file_name, "w") as f:
+    with open(pathlib.Path(dst_folder) / repo_folder / manifest_file_name, "w") as f:
         f.write(text)
         f.flush()
 
 
-def get_repo_manifest(dst_path: str = os.getcwd(),
-                      repo_folder: str = ".repo",
-                      manifest_file_name: str = "default.xml"):
+def create_mapping(dst_path: str = os.getcwd(),
+                            repo_folder: str = ".repo",
+                            manifest_file_name: str = "default.xml"):
     """ Clone the repo manifest """
 
     repo_path = pathlib.Path(dst_path) / repo_folder / manifest_file_name
@@ -138,32 +169,32 @@ def get_repo_manifest(dst_path: str = os.getcwd(),
     default_tag = repo_manifest.findall('.//default')[0]
     project_tag = repo_manifest.findall('.//project')
 
-    manifest_mapping = {}
+    mapping = {}
     for item in project_tag:
 
-        if item.attrib["name"] not in manifest_mapping:
-            manifest_mapping[item.attrib["name"]] = {}
+        if item.attrib["name"] not in mapping:
+            mapping[item.attrib["name"]] = {}
 
-        manifest_mapping[item.attrib["name"]]["path"] = item.attrib["path"]
+        mapping[item.attrib["name"]]["path"] = item.attrib["path"]
 
         if "revision" not in item.attrib:
-            manifest_mapping[item.attrib["name"]]["revision"] = default_tag.attrib["revision"]
+            mapping[item.attrib["name"]]["revision"] = default_tag.attrib["revision"]
 
         else:
-            manifest_mapping[item.attrib["name"]]["revision"] = item.attrib["revision"]
+            mapping[item.attrib["name"]]["revision"] = item.attrib["revision"]
 
         if "remote" not in item.attrib:
-            manifest_mapping[item.attrib["name"]]["remote"] = default_tag.attrib["remote"]
+            mapping[item.attrib["name"]]["remote"] = default_tag.attrib["remote"]
 
         else:
-            manifest_mapping[item.attrib["name"]]["remote"] = item.attrib["remote"]
+            mapping[item.attrib["name"]]["remote"] = item.attrib["remote"]
 
         for tag in remote_tag:
             remote_name = tag.attrib["name"]
-            if remote_name == manifest_mapping[item.attrib["name"]]["remote"]:
-                manifest_mapping[item.attrib["name"]]["remote"] = tag.attrib["fetch"]
+            if remote_name == mapping[item.attrib["name"]]["remote"]:
+                mapping[item.attrib["name"]]["remote"] = tag.attrib["fetch"]
 
-    return manifest_mapping
+    return mapping
 
 
 def sync_repos(manifest: Dict, dst_path: str = os.getcwd()):
@@ -177,7 +208,7 @@ def sync_repos(manifest: Dict, dst_path: str = os.getcwd()):
         dst_path = pathlib.Path(dst_path) / repo_data["path"]
         url = f"https://{pat}@{hostname}/{path}.git"
 
-        logging.info(f"Cloning {url}")
+        logging.info(f"Cloning {url.replace(pat, '*****')}")
         Repo.clone_from(url, dst_path, branch=repo_data["revision"])
 
     if manifest is None:
@@ -207,7 +238,7 @@ def sync_repos(manifest: Dict, dst_path: str = os.getcwd()):
             thread.join()
 
 
-def start_repos(branch: str):
+def start_repos(branch: str = "main"):
     """ Start the repo on branch """
 
 
@@ -224,6 +255,12 @@ def main():
                         stream=sys.stdout,
                         level=logging.INFO)
 
+    if args.pat:
+        print(args.pat)
+
+    if args.ghe_pat:
+        print(args.ghe_pat)
+
     dst_folder = os.getcwd()
     if args.dst:
         dst_folder = args.dst
@@ -233,16 +270,18 @@ def main():
         branch = "main"
 
     if args.init:
+
         if pathlib.Path(dst_folder) != pathlib.Path(__file__).resolve().parent:
             clean_dst(dst_folder)
+
         init_repo(args.url, branch, dst_folder=dst_folder)
 
     if args.sync:
-        manifest_mapping = get_repo_manifest(dst_path=dst_folder)
+        manifest_mapping = create_mapping(dst_path=dst_folder)
         sync_repos(manifest_mapping, dst_path=dst_folder)
 
-    if args.start:
-        start_repos(args.start)
+    # if args.start:
+    #     start_repos(args.start)
 
 
 if __name__ == '__main__':
