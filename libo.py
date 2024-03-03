@@ -210,7 +210,8 @@ def sync_repos(manifest: Dict, dst_path: str = os.getcwd()):
 
         if os.path.exists(dst_path):
 
-            logging.info(f"Pulling repo {url.replace(pat, '*****')} branch {repo_data['revision']}")
+            logging.info(f"Pulling repo {url.replace(pat, '*****')} "
+                         f"branch {repo_data['revision']}")
             repo = Repo(dst_path)
             repo.git.checkout(repo_data["revision"])
 
