@@ -150,8 +150,8 @@ def init_repo(url: str,
 
 
 def create_mapping(dst_path: str = os.getcwd(),
-                            repo_folder: str = ".repo",
-                            manifest_file_name: str = "default.xml"):
+                   repo_folder: str = ".repo",
+                   manifest_file_name: str = "default.xml"):
     """ Clone the repo manifest """
 
     repo_path = pathlib.Path(dst_path) / repo_folder / manifest_file_name
@@ -208,8 +208,16 @@ def sync_repos(manifest: Dict, dst_path: str = os.getcwd()):
         dst_path = pathlib.Path(dst_path) / repo_data["path"]
         url = f"https://{pat}@{hostname}/{path}.git"
 
-        logging.info(f"Cloning {url.replace(pat, '*****')}")
-        Repo.clone_from(url, dst_path, branch=repo_data["revision"])
+        if os.path.exists(dst_path):
+
+            logging.info(f"Pulling repo {url.replace(pat, '*****')} branch {repo_data['revision']}")
+            repo = Repo(dst_path)
+            repo.git.checkout(repo_data["revision"])
+
+        else:
+
+            logging.info(f"Cloning repo {url.replace(pat, '*****')}")
+            Repo.clone_from(url, dst_path, branch=repo_data["revision"])
 
     if manifest is None:
         raise Exception("Manifest file mapping missing run with --init flag")
