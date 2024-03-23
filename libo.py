@@ -127,7 +127,7 @@ def init_repo(url: str,
               dst_folder: str = os.getcwd()):
     """ Get repo manifest file """
 
-    hostname = url.replace('.git', '').split('://')[-1].split('/', 1)[0]
+    hostname = url.replace('.git', '').split('://')[-1].split('/', 1)[0].split("@")[-1]
     repo_link = url.replace('.git', '').split('://')[-1].split('/', 1)[-1]
 
     pat = get_pat()
