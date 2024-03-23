@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$/projects/libra_jenkins_executor" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/projects/libra_reserve_time" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/projects/vault_token_manager" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/satcommfw" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/test/bdd" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/test/lib_python/devices/bcs" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/test/lib_python/devices/common" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/test/lib_python/devices/icc" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/test/lib_python/devices/scc" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/test/lib_python/devops_utils" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/test/lib_python/revar_py" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/test/lib_python/system" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/test/sim/mbslave" vcs="Git" />
+  </component>
+</project>
