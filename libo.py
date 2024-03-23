@@ -122,7 +122,7 @@ def get_pat(ghe: bool = False):
 
 def init_repo(url: str,
               branch: str = "main",
-              repo_folder: str = ".repo",
+              repo_folder: str = ".manifest",
               manifest_file_name: str = "default.xml",
               dst_folder: str = os.getcwd()):
     """ Get repo manifest file """
@@ -150,7 +150,7 @@ def init_repo(url: str,
 
 
 def create_mapping(dst_path: str = os.getcwd(),
-                   repo_folder: str = ".repo",
+                   repo_folder: str = ".manifest",
                    manifest_file_name: str = "default.xml"):
     """ Clone the repo manifest """
 
