@@ -3,13 +3,6 @@
   <component name="CsvFileAttributes">
     <option name="attributeMap">
       <map>
-        <entry key="C:\Users\SESA675699\CODE\Scripts\saturn-test\SATCOMMFW\features\Regression\SAGA_App-eSetup-SATCOMMFW-3736\REST Commands List\td_satcommfw-t1061_no_alarm.csv">
-          <value>
-            <Attribute>
-              <option name="separator" value="," />
-            </Attribute>
-          </value>
-        </entry>
         <entry key="\saturn\test\bdd\parsers\saturn\device_type_aliases.csv">
           <value>
             <Attribute>
