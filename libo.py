@@ -62,7 +62,7 @@ def build_parser():
         help='Destination of repo'
     )
     parser.add_argument(
-        '--status', dest='status',
+        '--status', dest='status', action="store_true",
         help='Branch status of repo'
     )
     parser.add_argument(
@@ -247,7 +247,27 @@ def sync_repos(manifest: Dict, dst_path: str = os.getcwd()):
             thread.join()
 
 
-def start_repos(branch: str = "main"):
+def repo_status(repo_mapping: dict,
+                dst_path: str = os.getcwd()):
+    """ print status of repos """
+
+    max_branch_len = -1
+
+    for repo_path, repo_info in repo_mapping.items():
+        path = pathlib.Path(dst_path) / repo_info["path"]
+        if len(Repo(path).active_branch.name) > max_branch_len:
+            max_branch_len = len(Repo(path).active_branch.name)
+
+    for repo_path, repo_info in repo_mapping.items():
+        path = pathlib.Path(dst_path) / repo_info["path"]
+        branch = Repo(path).active_branch.name
+        branch = branch.ljust(max_branch_len + 3, ' ')
+        logging.info(f"{branch}{repo_path}")
+
+
+def start_repos(repo_mapping: dict,
+                branch: str = "main",
+                dst_path: str = os.getcwd()):
     """ Start the repo on branch """
 
 
@@ -279,7 +299,6 @@ def main():
         branch = "main"
 
     if args.init:
-
         if pathlib.Path(dst_folder) != pathlib.Path(__file__).resolve().parent:
             clean_dst(dst_folder)
 
@@ -289,8 +308,13 @@ def main():
         manifest_mapping = create_mapping(dst_path=dst_folder)
         sync_repos(manifest_mapping, dst_path=dst_folder)
 
-    # if args.start:
-    #     start_repos(args.start)
+    if args.start:
+        manifest_mapping = create_mapping(dst_path=dst_folder)
+        start_repos(manifest_mapping, args.start, dst_folder)
+
+    if args.status:
+        manifest_mapping = create_mapping(dst_path=dst_folder)
+        repo_status(manifest_mapping, dst_folder)
 
 
 if __name__ == '__main__':
