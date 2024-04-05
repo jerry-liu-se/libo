@@ -218,8 +218,6 @@ def sync_repos(manifest: Dict, dst_path: str = os.getcwd()):
             logging.info(f"Cloning repo {url.replace(pat, '*****')}")
             Repo.clone_from(url, dst_path, branch=repo_data["revision"])
 
-        logging.warning(path + " done")
-
     if manifest is None:
         raise Exception("Manifest file mapping missing run with --init flag")
 
