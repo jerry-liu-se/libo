@@ -285,10 +285,16 @@ def main():
                         level=logging.INFO)
 
     if args.pat:
-        print(args.pat)
+        keyring.set_password(KEYRING_SERVICE_NAME,
+                             KEYRING_USER_NAME,
+                             args.pat)
+        logging.info("GitHub PAT added to WCM!")
 
     if args.ghe_pat:
-        print(args.ghe_pat)
+        keyring.set_password(KEYRING_SERVICE_NAME_GHE,
+                             KEYRING_USER_NAME_GHE,
+                             args.pat)
+        logging.info("GitHub Enterprise PAT added to WCM!")
 
     dst_folder = os.getcwd()
     if args.dst:
