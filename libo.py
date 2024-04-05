@@ -6,14 +6,14 @@
 #
 ###############################################################################
 
+import threading
+import time
 import argparse
 import logging
 import os
 import pathlib
 import stat
 import sys
-import threading
-import time
 from typing import Dict
 
 import keyring
@@ -104,13 +104,13 @@ def clean_dst(dst_folder: pathlib.Path):
 def get_pat(ghe: bool = False):
     """ Get PAT from WCM """
 
-    if not ghe:
-        pat = keyring.get_password(KEYRING_SERVICE_NAME,
-                                   KEYRING_USER_NAME)
-
-    else:
+    if ghe:
         pat = keyring.get_password(KEYRING_SERVICE_NAME_GHE,
                                    KEYRING_USER_NAME_GHE)
+
+    else:
+        pat = keyring.get_password(KEYRING_SERVICE_NAME,
+                                   KEYRING_USER_NAME)
 
     if pat is None:
         raise Exception("No GitHub PAT or GHE PAT not provided or found in WCM. "
@@ -291,7 +291,7 @@ def main():
     if args.ghe_pat:
         keyring.set_password(KEYRING_SERVICE_NAME_GHE,
                              KEYRING_USER_NAME_GHE,
-                             args.pat)
+                             args.ghe_pat)
         logging.info("GitHub Enterprise PAT added to WCM!")
 
     dst_folder = os.getcwd()
