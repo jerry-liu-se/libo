@@ -10,6 +10,20 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\saturn\test\hil_model\dco\model_parameters.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\saturn\test\hil_model\evdc\model_parameters.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\saturn\test\hil_model\model_parameters.csv">
           <value>
             <Attribute>
@@ -24,7 +38,154 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\saturn\test\test_data\rtpc\lib_rtpc_API.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\saturn\test\test_data\rtpc\simulation_results\rtpc_GenTie_UnitTest_BackfeedControl.1_rtpcInputs.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\saturn\test\test_data\rtpc\simulation_results\rtpc_GenTie_UnitTest_BackfeedControl.1_rtpcOutputs.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\saturn\test\test_data\rtpc\simulation_results\rtpc_GridForming_UnitTest_PdcPiController.2_rtpcInputs.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\saturn\test\test_data\rtpc\simulation_results\rtpc_GridForming_UnitTest_PdcPiController.2_rtpcOutputs.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\saturn\test\test_data\rtpc\simulation_results\rtpc_GridTie_UnitTest_GridExportLimit.10_rtpcInputs.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\saturn\test\test_data\rtpc\simulation_results\rtpc_GridTie_UnitTest_GridExportLimit.10_rtpcOutputs.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\saturn\test\test_data\rtpc\simulation_results\rtpc_GridTie_UnitTest_Solar&amp;Storage_DCPV+ACPV_SelfConsumption.1_rtpcInputs.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\saturn\test\test_data\rtpc\simulation_results\rtpc_GridTie_UnitTest_Solar&amp;Storage_DCPV+ACPV_SelfConsumption.1_rtpcOutputs.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\saturn\test\test_data\ssm\lib_ssm_API.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\saturn\test\test_data\ssm\simulation_results\ssm_GenTieToGridForming.1_ssmInputs.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\saturn\test\test_data\ssm\simulation_results\ssm_GenTieToGridForming.1_ssmOutputs.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\saturn\test\test_data\ssm\simulation_results\ssm_GenTieToGridTie.1_ssmInputs.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\saturn\test\test_data\ssm\simulation_results\ssm_GenTieToGridTie.1_ssmOutputs.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\saturn\test\test_data\ssm\simulation_results\ssm_GridFormingToGenTie.1_ssmInputs.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\saturn\test\test_data\ssm\simulation_results\ssm_GridFormingToGenTie.1_ssmOutputs.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\saturn\test\test_data\ssm\simulation_results\ssm_GridFormingToGridTie.1_ssmInputs.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\saturn\test\test_data\ssm\simulation_results\ssm_GridFormingToGridTie.1_ssmOutputs.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\saturn\test\test_data\ssm\simulation_results\ssm_GridTieToGridForming.1_ssmInputs.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\saturn\test\test_data\ssm\simulation_results\ssm_GridTieToGridForming.1_ssmOutputs.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\saturn\test\test_data\ssm\simulation_results\ssm_StartUp.2_ssmInputs.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\saturn\test\test_data\ssm\simulation_results\ssm_StartUp.2_ssmOutputs.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />

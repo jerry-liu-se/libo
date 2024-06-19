@@ -4,12 +4,7 @@
     <mapping directory="$PROJECT_DIR$/saturn" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/saturn/projects/jira_tm4j_sync" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/saturn/projects/libra_credential_manager" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/saturn/projects/libra_device_calibration" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/saturn/projects/libra_fioctl_tool" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/saturn/projects/libra_jenkins_executor" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/saturn/projects/libra_parser_validation" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/saturn/projects/libra_report_tm4j_results" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/saturn/projects/libra_user_manager" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/saturn/test/bdd" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/saturn/test/bdd/configs" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/saturn/test/bdd/configs/site_configs" vcs="Git" />
@@ -21,6 +16,7 @@
     <mapping directory="$PROJECT_DIR$/saturn/test/bdd/devices/saturn/bcs" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/saturn/test/bdd/devices/saturn/bms" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/saturn/test/bdd/devices/saturn/esetup" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/saturn/test/bdd/devices/saturn/evdc" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/saturn/test/bdd/devices/saturn/icc" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/saturn/test/bdd/devices/saturn/scc" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/saturn/test/bdd/devices/saturn/sem" vcs="Git" />
@@ -41,10 +37,10 @@
     <mapping directory="$PROJECT_DIR$/saturn/test/lib_python/revar_py" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/saturn/test/lib_python/saturndb" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/saturn/test/lib_python/serial" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/saturn/test/lib_python/sysvardb/evdc_db" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/saturn/test/lib_python/sysvardb/icc_v2_ll_ctrl" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/saturn/test/lib_python/sysvardb/icc_v2_shared_db" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/saturn/test/lib_python/sysvardb/icc_v2_sv_ctrl" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/saturn/test/sim/bms" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/saturn/test/sim/mbslave" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/saturn/test/test_data/rtpc" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/saturn/test/test_data/ssm" vcs="Git" />

@@ -1,0 +1,8 @@
+test_node: test-jerry
+devices:
+  - device_id: BCS
+    device_type: BCS
+    fw: skip
+  - device_id: SCC
+    device_type: SCC
+    fw: skip

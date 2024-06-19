@@ -1,0 +1,32 @@
+test_node:
+  ip: 0.0.0.0
+  name: test-jerry
+devices:
+  - device_id: BCS
+    device_type: BackupControlSwitchEnergyCenter
+    init_info:
+      serial_port: COM10
+      hw_rev: PROTO_2_PROD
+  - device_id: eSetup
+    device_type: eSetup
+    init_info:
+      server_ip: 192.168.20.1
+  - device_id: SCC
+    device_type: SaturnCommsCard
+    init_info:
+      ip_addr: 192.168.20.1
+      serial_port: COM4
+      keep_wifi: True
+  - device_id: ICC
+    device_type: InverterControlCard
+    init_info:
+      hw_rev: 1
+  - device_id: MB
+    device_type: ModbusDevice
+    init_info:
+      serial_port: COM9
+  - device_id: ETH008C
+    device_type: ETH008CRelay
+    init_info:
+      ip_addr: 192.168.0.200
+      relay_configs: [{'port': 8, 'contact': 'NC', 'app': 'BCS_UART'}]
